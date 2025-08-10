@@ -48,39 +48,39 @@ python setup_dev.py
 ### GET Request with Pretty Output
 
 ```bash
-reqninja http GET https://jsonplaceholder.typicode.com/posts/1
+reqninja http get https://jsonplaceholder.typicode.com/posts/1
 ```
 
 ### POST JSON with Custom Headers
 
 ```bash
-reqninja http POST https://httpbin.org/post \
-  -d '{"name":"Vishal"}' \
+reqninja http post https://httpbin.org/post \
+  -j '{"name":"Vishal"}' \
   -H "Content-Type: application/json"
 ```
 
 ### Show Raw Output
 
 ```bash
-reqninja http GET /data --raw
+reqninja http get https://api.example.com/data --raw
 ```
 
 ### Save Response
 
 ```bash
-reqninja http GET /users --save results.json
+reqninja http get https://api.example.com/users --save results.json
 ```
 
 ### Switch Profile
 
 ```bash
-reqninja http GET /users --profile prod
+reqninja http get https://api.example.com/users --profile prod
 ```
 
 ### View Timing and Debug Info
 
 ```bash
-reqninja http GET /users --debug
+reqninja http get https://api.example.com/users --debug
 ```
 
 ## 💻 Quickstart: Python Library
@@ -146,9 +146,23 @@ Prints the full request, headers, body, and a timing breakdown for deeper inspec
 
 A single, modern tool for both quick API experiments and robust automation — with the polish, safety, and visibility pro devs expect.
 
+## ⚠️ CLI Common Mistakes
+
+### Use `http` for both HTTP and HTTPS
+**Wrong:** `reqninja https get https://api.example.com`  
+**Correct:** `reqninja http get https://api.example.com`
+
+### Use lowercase methods
+**Wrong:** `reqninja http GET https://api.example.com`  
+**Correct:** `reqninja http get https://api.example.com`
+
+ReqNinja provides helpful error messages to guide you to the correct syntax!
+
 ## 📚 Documentation
 
 For complete documentation, visit [reqninja.readthedocs.io](https://reqninja.readthedocs.io)
+
+Also see [CLI_USAGE_GUIDE.md](CLI_USAGE_GUIDE.md) for detailed CLI usage examples.
 
 ## 🤝 Contributing
 

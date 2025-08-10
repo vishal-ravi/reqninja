@@ -29,11 +29,50 @@ def cli(ctx: click.Context, config: Optional[str] = None) -> None:
     ctx.obj['config'] = config
 
 
-@cli.group()
+class HttpGroup(click.Group):
+    """Custom group to provide better error messages for HTTP commands."""
+    
+    def get_command(self, ctx, cmd_name):
+        # Try to get the command normally first
+        rv = super().get_command(ctx, cmd_name)
+        if rv is not None:
+            return rv
+        
+        # Check if it's an uppercase method
+        uppercase_methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+        if cmd_name in uppercase_methods:
+            lowercase_method = cmd_name.lower()
+            click.echo(f"❌ Use lowercase: 'reqninja http {lowercase_method}'")
+            click.echo(f"📝 Example: reqninja http {lowercase_method} <url>")
+            ctx.exit(1)
+        
+        return rv
+
+
+@cli.group(cls=HttpGroup)
 @click.pass_context
 def http(ctx: click.Context) -> None:
     """Make HTTP requests."""
     pass
+
+
+@cli.command()
+@click.argument('args', nargs=-1)
+@click.pass_context
+def https(ctx: click.Context, args) -> None:
+    """Handle https command and provide helpful guidance."""
+    click.echo("❌ Use 'reqninja http' for both HTTP and HTTPS requests.")
+    click.echo("📝 Examples:")
+    click.echo("  reqninja http get https://api.example.com/data")
+    click.echo("  reqninja http post http://localhost:3000/api/users")
+    
+    if args:
+        method = args[0].lower() if args else ''
+        url = args[1] if len(args) > 1 else ''
+        if method in ['get', 'post', 'put', 'patch', 'delete'] and url:
+            click.echo(f"💡 Try: reqninja http {method} {url}")
+    
+    ctx.exit(1)
 
 
 @http.command()
